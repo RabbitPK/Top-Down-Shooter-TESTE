@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public GameObject explosionEffect;
     public float lifeTime = 2f;
 
     void Start()
@@ -11,12 +12,28 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Bullet colidiu com: " + other.gameObject.name); // Teste para debug
-
         if (other.CompareTag("Enemy"))
         {
-            Destroy(other.gameObject); // Destroi o inimigo
-            Destroy(gameObject); // Destroi a bala
+            if (explosionEffect != null)
+            {
+                Instantiate(explosionEffect, other.transform.position, Quaternion.identity);
+            }
+            else
+            {
+                Debug.LogError("ExplosionEffect não está atribuído no Bullet!");
+            }
+
+            if (ScoreManager.instance != null)
+            {
+                ScoreManager.instance.AddScore(10);
+            }
+            else
+            {
+                Debug.LogError("ScoreManager.instance está NULL!");
+            }
+
+            Destroy(other.gameObject);
+            Destroy(gameObject);
         }
     }
 }

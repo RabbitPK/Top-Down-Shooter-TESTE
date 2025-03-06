@@ -4,6 +4,7 @@ public class Enemy : MonoBehaviour
 {
     public float speed = 2f;
     private Transform player;
+    public float damage = 10f; // Dano causado ao jogador
 
     void Start()
     {
@@ -33,6 +34,16 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("Inimigo colidiu com o Player!");
+            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage); // Aplica dano ao jogador
+            Destroy(gameObject); // Destroi o inimigo
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            other.GetComponent<PlayerHealth>().TakeDamage(damage); // Aplica dano ao jogador
             Destroy(gameObject); // Destroi o inimigo
         }
     }
